@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MapDemo</string>
+    <string name="title_activity_map">MapDemo</string>
+    <string name="ulster_desc">SUNY Ulster\\n491 Cottekill Rd, Stone Ridge, NY\\n12484</string>
+</resources>
