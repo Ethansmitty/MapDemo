@@ -2,4 +2,22 @@
     <string name="app_name">MapDemo</string>
     <string name="title_activity_map">MapDemo</string>
     <string name="ulster_desc">SUNY Ulster\\n491 Cottekill Rd, Stone Ridge, NY\\n12484</string>
+    <string name="normal">Normal</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="satellite">Satellite</string>
+    <string name="terrain">Terrain</string>
+    <string name="suny_ulster">SUNY Ulster</string>
+    <string name="hardenbergh">Hardenbergh</string>
+    <string name="burroughs">Burroughs</string>
+    <string name="algonquin">Algonquin</string>
+    <string name="vanderlyn">Vanderlyn</string>
+    <string name="dewitt_library">Dewitt Library</string>
+    <string name="senate_gym">Senate Gym</string>
+    <string-array name="layers_array">
+        <item>@string/normal</item>
+        <item>@string/hybrid</item>
+        <item>@string/satellite</item>
+        <item>@string/terrain</item>
+    </string-array>
+    <string name="map_not_ready">Map is not ready yet</string>
 </resources>

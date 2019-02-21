@@ -1,8 +1,90 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ethan.mapdemo.MapActivity" />
+    xmlns:map="http://schemas.android.com/apk/res-auto">
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        map:cameraTargetLat="41.851467"
+        map:cameraTargetLng="-74.129027"
+        map:cameraZoom="17"
+        map:cameraBearing="138"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+    <!-- A set of test checkboxes. -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <Spinner
+            android:id="@+id/layers_spinner"
+            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <CheckBox
+            android:id="@+id/ulsterMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:checked="true"
+            android:onClick="ulsterMainToggled"
+            android:text="@string/suny_ulster" />
+
+        <CheckBox
+            android:id="@+id/hBuilding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="hBuildingToggled"
+            android:text="@string/hardenbergh" />
+
+        <CheckBox
+            android:id="@+id/bBuilding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="bBuildingToggled"
+            android:text="@string/burroughs" />
+
+        <CheckBox
+            android:id="@+id/aBuilding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="aBuildingToggled"
+            android:text="@string/algonquin" />
+
+        <CheckBox
+            android:id="@+id/vBuilding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="vBuildingToggled"
+            android:text="@string/vanderlyn" />
+
+        <CheckBox
+            android:id="@+id/dBuilding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="dBuildingToggled"
+            android:text="@string/dewitt_library" />
+
+        <CheckBox
+            android:id="@+id/sBuilding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="sBuildingToggled"
+            android:text="@string/senate_gym" />
+    </LinearLayout>
+</RelativeLayout>

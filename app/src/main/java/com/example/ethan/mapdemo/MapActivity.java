@@ -9,6 +9,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.Toast;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -24,15 +30,22 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import static com.google.android.gms.maps.GoogleMap.*;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener, AdapterView.OnItemSelectedListener {
 
     private GoogleMap mMap;
     private static final int MY_PERMISSION_FINE_LOCATION = 101;
     private static final int LOCATION_SETTINGS_REQUEST = 102;
+
+    private Spinner mSpinner;
+    private CheckBox ulsterMain, hBuilding, bBuilding, aBuilding, vBuilding, dBuilding, sBuilding;
+
+    private Marker ulsterMarker, hMarker, bMarker, aMarker, vMarker, dMarker, sMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ulsterMain = findViewById(R.id.ulsterMain);
+        hBuilding = findViewById(R.id.hBuilding);
+        bBuilding = findViewById(R.id.bBuilding);
+        aBuilding = findViewById(R.id.aBuilding);
+        vBuilding = findViewById(R.id.vBuilding);
+        dBuilding = findViewById(R.id.dBuilding);
+        sBuilding = findViewById(R.id.sBuilding);
+
+        mSpinner = (Spinner) findViewById(R.id.layers_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.layers_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+        mSpinner.setOnItemSelectedListener(this);
     }
 
 
@@ -58,18 +86,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnMarkerDragListener(this);
 
         LatLngBounds ULSTER = new LatLngBounds(new LatLng(41.849423, -74.133734), new LatLng(41.853426, -74.126084));
         LatLng ULSTERCENTER = new LatLng(41.851467, -74.129027);
 
-        // Add a marker at Ulster and move/zoom the camera
-        mMap.addMarker(new MarkerOptions()
-                .position(ULSTERCENTER)
-                .title("SUNY Ulster")
-                .snippet("491 Cottekill Rd, Stone Ridge, NY 12484")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        // Add markers for buildings
+        setUpMarkers();
+
         mMap.setLatLngBoundsForCameraTarget(ULSTER);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ULSTERCENTER, 17));
 
         //MyLocation layer
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -83,7 +108,47 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
     }
 
+    private void setUpMarkers()
+    {
+        ulsterMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.851467, -74.129027))
+                .title("SUNY Ulster")
+                .snippet("491 Cottekill Rd, Stone Ridge, NY 12484")
+                .draggable(true)
+                .visible(true)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
+        hMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.8521, -74.1278))
+                .title("Hardenbergh Building")
+                .visible(false)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        bMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.85126, -74.12745))
+                .title("Burroughs Hall")
+                .visible(false)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        aMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.85074, -74.128028))
+                .title("Algonquin")
+                .visible(false)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        vMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.850867, -74.12979))
+                .title("Vanderlyn Hall")
+                .visible(false)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        dMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.85132, -74.128813))
+                .title("Dewitt Library")
+                .visible(false)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        sMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(41.85078, -74.1308))
+                .title("Senate Gymnasium")
+                .visible(false)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -145,5 +210,107 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
             }
         });
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+        Toast.makeText(this, marker.getPosition().toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        Toast.makeText(this, marker.getPosition().toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // No toast because this can also be called by the Android framework in onResume() at which
+        // point mMap may not be ready yet.
+        if (mMap == null) {
+            return;
+        }
+
+        String layerName = ((String) mSpinner.getSelectedItem());
+        if (layerName.equals(getString(R.string.normal))) {
+            mMap.setMapType(MAP_TYPE_NORMAL);
+        } else if (layerName.equals(getString(R.string.hybrid))) {
+            mMap.setMapType(MAP_TYPE_HYBRID);
+
+
+        } else if (layerName.equals(getString(R.string.satellite))) {
+            mMap.setMapType(MAP_TYPE_SATELLITE);
+        } else if (layerName.equals(getString(R.string.terrain))) {
+            mMap.setMapType(MAP_TYPE_TERRAIN);
+        } else {
+            Log.i("LDA", "Error setting layer with name " + layerName);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private boolean checkReady() {
+        if (mMap == null) {
+            Toast.makeText(this, R.string.map_not_ready, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void ulsterMainToggled(View view) {
+        if (checkReady()) {
+            ulsterMarker.setVisible(ulsterMain.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(ulsterMarker.getPosition()));
+        }
+    }
+
+
+    public void hBuildingToggled(View view) {
+        if (checkReady()) {
+            hMarker.setVisible(hBuilding.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(hMarker.getPosition()));
+        }
+    }
+
+    public void bBuildingToggled(View view) {
+        if (checkReady()) {
+            bMarker.setVisible(bBuilding.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(bMarker.getPosition()));
+        }
+    }
+
+    public void aBuildingToggled(View view) {
+        if (checkReady()) {
+            aMarker.setVisible(aBuilding.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(aMarker.getPosition()));
+        }
+    }
+
+    public void vBuildingToggled(View view) {
+        if (checkReady()) {
+            vMarker.setVisible(vBuilding.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(vMarker.getPosition()));
+        }
+    }
+
+    public void dBuildingToggled(View view) {
+        if (checkReady()) {
+            dMarker.setVisible(dBuilding.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(dMarker.getPosition()));
+        }
+    }
+
+    public void sBuildingToggled(View view) {
+        if (checkReady()) {
+            sMarker.setVisible(sBuilding.isChecked());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sMarker.getPosition()));
+        }
     }
 }
