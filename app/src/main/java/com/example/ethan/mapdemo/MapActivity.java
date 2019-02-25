@@ -64,7 +64,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         dBuilding = findViewById(R.id.dBuilding);
         sBuilding = findViewById(R.id.sBuilding);
 
-        mSpinner = (Spinner) findViewById(R.id.layers_spinner);
+        mSpinner = findViewById(R.id.layers_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.layers_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -89,7 +89,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMap.setOnMarkerDragListener(this);
 
         LatLngBounds ULSTER = new LatLngBounds(new LatLng(41.849423, -74.133734), new LatLng(41.853426, -74.126084));
-        LatLng ULSTERCENTER = new LatLng(41.851467, -74.129027);
 
         // Add markers for buildings
         setUpMarkers();
@@ -176,7 +175,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)
-                .setFastestInterval(1 * 1000);
+                .setFastestInterval(1000);
 
         final LocationSettingsRequest.Builder settingsBuilder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
